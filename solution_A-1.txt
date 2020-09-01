@@ -1,0 +1,78 @@
+Gimple Dumps
+------
+
+main ()
+{
+  int a;
+  int b;
+  int c;
+  int p;
+  int q;
+  double r;
+
+  p = 6;
+  a = 10;
+  b = 20;
+  _1 = a * b;
+  c = _1 + 25;
+  p = 6;
+  q = Z;
+  r = 3.45e+1;
+  _2 = (int) r;
+  Z = _2;
+  Z.0_3 = Z;
+  _4 = Z.0_3 + 1;
+  Z = _4;
+}
+
+
+
+Answers
+-------
+
+1. One variable is declared explicitly per line. The global variable i.e. 
+  `int Z` is not explicitly declared, but has a preservance in accessing 
+   it globally. For using the global variable Z, its value must be
+   stored into the local variables, wherever needed.
+
+2. One operation is taken care of per line. Temporary variables are 
+   introduced and used, whenever an operation is performed, as an intermediate component of a the operation.
+
+3. Floating points and doubles are represented using scientific notation.
+   Type casting occurs explicitly when converting from float to int.
+
+4. Reads and writes to Z performed through intermediate local variables. A
+   temporary variable is required for Z = Z + 1 because the result of the operation Z + 1 cannot be written directly to a memory location.
+
+
+Optional problem
+----------------
+
+Raw dump:
+
+main ()
+gimple_bind <
+  int a;
+  int b;
+  int c;
+  int p;
+  int q;
+  double r;
+
+  gimple_assign <integer_cst, p, 6, NULL, NULL>
+  gimple_assign <integer_cst, a, 10, NULL, NULL>
+  gimple_assign <integer_cst, b, 20, NULL, NULL>
+  gimple_assign <mult_expr, _1, a, b, NULL>
+  gimple_assign <plus_expr, c, _1, 25, NULL>
+  gimple_assign <integer_cst, p, 6, NULL, NULL>
+  gimple_assign <var_decl, q, Z, NULL, NULL>
+  gimple_assign <real_cst, r, 3.45e+1, NULL, NULL>
+  gimple_assign <fix_trunc_expr, _2, r, NULL, NULL>
+  gimple_assign <ssa_name, Z, _2, NULL, NULL>
+  gimple_assign <var_decl, Z.0_3, Z, NULL, NULL>
+  gimple_assign <plus_expr, _4, Z.0_3, 1, NULL>
+  gimple_assign <ssa_name, Z, _4, NULL, NULL>
+>
+
+Sol. This resembles to a tree of raw dumps, maybe - internally, there is a 
+     tree structure to gimple, hence in gimple we have a tree of more human-readablility.
